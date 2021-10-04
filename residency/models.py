@@ -1,0 +1,181 @@
+# Residency models.
+
+# Django.
+from django.db import models
+from django.urls import reverse
+from datetime import date
+
+
+class Prepaid(models.Model):
+    # Prepaid model.
+    
+    name = models.CharField(max_length = 200)
+    email = models.EmailField(max_length = 200, blank = True)
+    phone_number = models.CharField(max_length = 50, blank = True)
+    
+    def __str__(self) -> str:
+        return self.name
+
+
+class Resident(models.Model):
+    # Resident model.
+    
+    status = models.CharField(max_length = 50, choices = [
+        ('Activo', 'Activo'), ('Baja', 'Baja')], default = 'Activo')
+    admission_date = models.DateTimeField(auto_now_add = True)
+    nickname = models.CharField(max_length = 50, blank = True)
+    first_name = models.CharField(max_length = 100)
+    last_name = models.CharField(max_length = 100)
+    birth_date = models.DateField(help_text = 'Formato AAAA-mm-dd')
+    gender = models.CharField(max_length = 50, choices = [
+        ('Otro', 'Otro'), ('Masculino', 'Masculino'), ('Femenino', 'Femenino')], default = 0)
+    citizenship = models.CharField(max_length = 50, blank = True)
+    marital_status = models.CharField(max_length = 50, choices = [
+        ('Casado/a', 'Casado/a'), ('Divorciado/a', 'Divorciado/a'), ('Viudo/a', 'Viudo/a'), 
+        ('Soltero/a', 'Soltero/a')], default = 'Casado/a')
+    address = models.CharField(max_length = 100, blank = True)
+    city = models.CharField(max_length = 100, blank = True)
+    id_type = models.CharField(max_length = 50, choices = [
+        ('DNI', 'DNI'), ('LC', 'LC'), ('LE', 'LE'), ('Pasaporte', 'Pasaporte')], default = 'DNI')
+    id_number = models.CharField(max_length = 20, unique = True)
+    prepaid = models.ForeignKey(Prepaid, on_delete = models.PROTECT, default = 0)
+    affiliation_number = models.CharField(max_length = 100)
+    last_modified = models.DateTimeField(auto_now = True)
+    picture = models.ImageField(upload_to = 'resident/photos', blank = True, null = True)
+    tutor = models.ForeignKey('Tutor', on_delete = models.PROTECT, related_name = 'resident')
+    
+    def age(self):
+        age = date.today().year - self.birth_date.year
+        return age
+    
+    def __str__(self):
+        return f'{self.first_name} {self.last_name} / {self.nickname}'
+        
+    def get_absolute_url(self):
+        return reverse('resident_list')
+
+
+class Medication(models.Model):
+    # Medication model.
+    
+    drug_name = models.CharField(max_length = 100)
+    commercial_name = models.CharField(max_length = 200)
+    pharmaceutical_form = models.CharField(max_length = 50, choices = [
+        ('Cápsulas', 'Cápsulas'), ('Crema', 'Crema'), ('Dosis', 'Dosis'), ('Gel', 'Gel'), ('Gotas', 'Gotas'), 
+        ('Inyectable', 'Inyectable'), ('Jarabe', 'Jarabe'), ('Loción', 'Loción'), ('Paff', 'Paff'), 
+        ('Parche', 'Parche'), ('Polvo', 'Polvo'), ('Pomada', 'Pomada'), ('Suplemento', 'Suplemento'), 
+        ('Otro', 'Otro')], default = 'Otro')
+    amount = models.FloatField()
+    measurement_unit = models.CharField(max_length = 10, choices = [
+        ('Unidad', 'Unidad'), ('mg', 'mg'), ('g', 'g'), ('kg', 'kg'), ('ml', 'ml')], default = 'Unidad')
+    picture = models.ImageField(upload_to = 'residency/pictures/medication', blank = True, null = True)
+    
+    def __str__(self):
+        return f'{self.commercial_name} {self.amount} {self.measurement_unit}'
+    
+    def get_absolute_url(self):
+        return reverse('medication_search')
+
+
+class Prescription(models.Model):
+    # Prescription model.
+    
+    resident = models.ForeignKey(Resident, on_delete = models.CASCADE, related_name = 'prescriptions')
+    medication = models.ForeignKey(Medication, on_delete = models.PROTECT, related_name = 'prescriptions')
+    breakfast = models.FloatField(default = 0)
+    lunch = models.FloatField(default = 0)
+    tea = models.FloatField(default = 0)
+    dinner = models.FloatField(default = 0)
+    notes = models.TextField(max_length = 500, blank = True)
+    medication_status = models.CharField(max_length = 50, choices = [
+        ('Activo', 'Activo'), ('Suspendido', 'Suspendido'), ('SOS', 'SOS')], default = 'Activo')
+    prescription_date = models.DateField(help_text = 'Formato AAAA-mm-dd')
+    last_registry_date = models.DateTimeField(auto_now_add = True)
+    in_pillbox = models.BooleanField(default = False)
+    floor = models.CharField(max_length = 50, choices = [
+        ('Planta baja', 'Planta baja'), ('Planta alta', 'Planta alta')], default = 'Planta baja')
+    
+    def total_per_day(self):
+        total = self.breakfast + self.lunch + self.tea + self.dinner
+        return total
+    
+    def avaliable_stock(self):
+        stock_list = Stock.objects.filter(prescription_id = self.pk)
+        for stock in stock_list:
+            if stock.avaliable > 0:
+                return stock
+            
+    def stock_list(self):
+        return  Stock.objects.filter(prescription_id = self.pk)
+    
+    def __str__(self):
+        return f'{self.resident} - {self.medication}'    
+    
+    def get_absolute_url(self):
+        return reverse('prescription_search')
+
+
+class Stock(models.Model):
+    # Stock model.
+    
+    prescription = models.ForeignKey(Prescription, on_delete = models.CASCADE, related_name = 'stock')
+    medication = models.ForeignKey(Medication, on_delete = models.PROTECT, related_name = 'stock')
+    avaliable = models.FloatField()
+    date = models.DateTimeField(auto_now_add = True)
+        
+    def unit_converter(self):
+        # Converts stock measurement unit to fit prescription's one.
+        
+        if self.prescription.medication.measurement_unit == 'mg':
+            if self.medication.measurement_unit == 'g':
+                return self.medication.amount * 1000
+            elif self.medication.measurement_unit == 'kg':
+                return self.medication.amount * 1000000
+            else:
+                return self.medication.amount
+        elif self.prescription.medication.measurement_unit == 'g':
+            if self.medication.measurement_unit == 'mg':
+                return self.medication.amount / 1000
+            elif self.medication.measurement_unit == 'kg':
+                return self.medication.amount * 1000
+            else:
+                return self.medication.amount
+        elif self.prescription.medication.measurement_unit == 'kg':
+            if self.medication.measurement_unit == 'mg':
+                return self.medication.amount / 1000000
+            elif self.medication.measurement_unit == 'g':
+                return self.medication.amount / 1000
+            else:
+                return self.medication.amount
+        else:
+            return self.medication.amount
+            
+    def meal_calculator(self):
+        # Calculates the different meal dosis according to prescription's.
+        
+        meal_list = []
+        for meal in [self.prescription.breakfast, self.prescription.lunch,
+                     self.prescription.tea, self.prescription.dinner]:
+            meal_list.append(meal / self.unit_converter())
+        return meal_list
+    
+    def get_absolute_url(self):
+        return reverse('prescription_search')
+
+
+class Tutor(models.Model):
+    # Tutor model.
+
+    first_name = models.CharField(max_length = 100)
+    last_name = models.CharField(max_length = 100)
+    phone_number = models.CharField(max_length = 100)
+    email = models.EmailField(max_length = 100, blank = True)
+    address = models.CharField(max_length = 100, blank = True)
+    city = models.CharField(max_length = 100, blank = True)
+    billing_info = models.CharField(max_length = 20, unique = True)
+    
+    def __str__(self):
+        return f'{self.first_name} {self.last_name}'
+
+    def get_absolute_url(self):
+        return reverse('resident_list')

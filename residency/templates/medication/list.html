@@ -1,0 +1,91 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+    {# Success messages. #}
+    {% if messages %}
+        {% for message in messages %}
+            <div class="alert alert-success" role="alert">
+                {{ message }}
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+        {% endfor %}
+    {% endif %}
+
+    {# Medication card. #}
+    <div class="card">
+
+        {# Card head and tabs. #}
+        <div class="card-header">
+            <ul class="nav nav-tabs card-header-tabs">
+                <li class="nav-item">
+                    <a class="nav-link active" href="{% url 'medication_list' %}">Buscar</a>
+                </li>
+                <li class="nav-item">
+					<a class="nav-link disabled" href="#">Detalle</a>
+				</li>
+                <li class="nav-item">
+                    <a class="nav-link disabled" href="#">Crear</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link disabled" href="#">Editar</a>
+                </li>
+            </ul>
+        </div>
+
+        {# Card body. #}
+        <div class="card-body">
+            <h6 class="card-subtitle mb-2 text-muted">Buscar medicación por nombre de droga o nombre comercial
+                {# Medication creation button. #}
+                <a href="{% url 'medication_create' %}" class="btn btn-primary btn-sm ml-3">
+                    <i class="bi bi-eyedropper mr-2"></i>Nueva medicación
+                </a>
+            </h6>
+
+            <form action="{% url 'medication_search' %}" method="POST">
+                {% csrf_token %}
+
+                <div class="input-group">
+                    <input type="search" name="imput_field" class="form-control">
+                    
+                    <span class="input-group-append">
+                        <button class="btn btn-primary" type="submit">
+                            <i class="bi bi-search"></i>
+                        </button>
+                    </span>
+                </div>
+            </form>
+
+            <br>
+
+            <table class="table table-hover table-bordered">
+				
+				{# Table headers. #}
+				<thead class="table-dark">
+					<tr>
+						<th scope="col">Nombre de la droga</th>
+						<th scope="col">Nombre comercial</th>
+						<th scope="col">Acciones</th>
+					</tr>
+				</thead>
+				
+				{# Table body. #}
+				<tbody>
+					{% for medication in medication_list %}
+					<tr>
+						<td>{{ medication.drug_name }}</td>
+						<td>{{ medication }}</td>
+						<td>
+							<a href="{% url 'medication_update' medication.pk %}" class="btn btn-link btn-sm" data-toggle="tooltip" title="Actualizar">
+								<i class="bi bi-pencil-square"></i>
+							</a>
+						</td>
+					</tr>
+					{% endfor %}
+				</tbody>
+			</table>
+        </div>
+    </div>
+{% endblock %}

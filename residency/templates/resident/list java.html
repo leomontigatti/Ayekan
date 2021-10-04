@@ -1,0 +1,131 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+	{# Resident creation button. #}
+	<a class="btn btn-primary" href="{% url 'resident_create' %}">Nuevo residente <i class="bi bi-person-plus"></i></a>
+
+	<hr>
+
+	{# Resident card. #}
+	<div class="card">
+		
+		{# Card head and tabs. #}
+		<div class="card-header">
+			<ul class="nav nav-tabs card-header-tabs">
+				<li class="nav-item">
+					<a class="nav-link" href="{% url 'resident_search' %}">Buscar</a>
+				</li>
+				<li class="nav-item">
+					<a class="nav-link active" href="{% url 'resident_list' %}">Lista</a>
+				</li>
+				<li class="nav-item">
+					<a class="nav-link disabled" href="#" aria-disabled="true">Crear</a>
+				</li>
+				<li class="nav-item">
+					<a class="nav-link disabled" href="#" tabindex="-1" aria-disabled="true">Editar</a>
+				</li>
+			</ul>
+		</div>
+
+		{# Card body. #}
+		<div class="card-body">
+			<table class="table table-striped table-bordered" aria-describedby="datatable-buttons_info">
+				
+				{# Table headers. #}
+				<thead class="table-dark">
+					<tr>
+						<th scope="col">Apodo</th>
+						<th scope="col">Nombre</th>
+						<th scope="col">Apellido</th>
+						<th scope="col"></th>
+					</tr>
+				</thead>
+				
+				{# Table body. #}
+				<tbody id="tbody">
+					<input id="search_here" class="form-control mb-3" placeholder="type here to search..">
+					<!-- {% for resident in resident_list %}
+						<tr>
+							<td>{{ resident.nickname }}</td>
+							<td>{{ resident.first_name }}</td>
+							<td>{{ resident.last_name }}</td>
+							<td>
+								<a href="{% url 'resident_detail' resident.pk %}" class="btn btn-primary btn-sm" data-toggle="tooltip" title="Ver">
+									<i class="bi bi-eye"></i>
+								</a>
+								<a href="{% url 'resident_update' resident.pk %}" class="btn btn-primary btn-sm" data-toggle="tooltip" title="Actualizar">
+									<i class="bi bi-pencil-square"></i>
+								</a>
+							</td>
+						</tr>
+					{% endfor %} -->
+				</tbody>
+			</table>
+		</div>
+	</div>
+
+{% endblock content %}
+
+{% block scripts %}
+
+	<script>
+		const data = `{{ qs_json }}`
+		const rdata = JSON.parse(data.replace(/&quot;/g, '"'))
+		const input = document.getElementById('search_here')
+		const filter_residents = () => {
+			const search_criteria = input.value
+			const filtered_resident = rdata.filter( residente => {
+				return residente.first_name.toLowerCase().includes(search_criteria.toLowerCase()) ||
+					residente.last_name.toLowerCase().includes(search_criteria.toLowerCase()) ||
+					residente.nickname.toLowerCase().includes(search_criteria.toLowerCase())
+			})
+			let list_inner_html = ''
+			const url = `{% url 'resident_detail' 1%}`
+			filtered_resident.forEach(resident => {
+				const final_url = url.replace('/1/',`/${resident.id}/`)
+				list_inner_html += `<tr>
+					<td>${ resident.nickname }</td>
+					<td>${ resident.first_name }</td>
+					<td>${ resident.last_name }</td>
+					<td>
+						<a href="${final_url}" class="btn btn-primary btn-sm" data-toggle="tooltip" title="Ver">
+							<i class="bi bi-eye"></i>
+						</a>
+						
+						<a href="${final_url}" class="btn btn-primary btn-sm" data-toggle="tooltip" title="Actualizar">
+							<i class="bi bi-pencil-square"></i>
+						</a>
+					</td>
+				</tr>`
+			})
+			var element = document.getElementById('tbody')
+			element.innerHTML = list_inner_html
+		}
+		input.addEventListener('keyup', filter_residents)
+		filter_residents()
+	</script>
+	
+{% endblock scripts %}
+
+
+<!-- 
+console.log(rdata)
+
+const input = document.getElementById('search_here')
+console.log(input)
+
+let filteredArr = []
+
+input.addEventListener('keyup', (e)=>{
+	box.innerHTML = ""
+	filteredArr = rdata.filter(info=> info['name'].includes(e.target.value))
+	console.log(filteredArr)
+	if (filteredArr.length > 0){
+		filteredArr.map(info=>{
+			box.innerHTML += `<b>${info['name']}</b><br>`
+		})
+	} else {
+		box.innerHTML = "<b>No results found...</b>"
+	}
+}) -->

@@ -1,0 +1,67 @@
+{% extends "base.html" %}
+{% load crispy_forms_tags %}
+
+{% block content %}
+    <div class="card">
+        
+        {# Card head and tabs. #}
+        <div class="card-header">
+            <ul class="nav nav-tabs card-header-tabs">
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'prescription_search' %}">Buscar</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'prescription_list' %}">Lista</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link disabled" href="#">Crear</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link active disabled" href="#">Editar</a>
+                </li>
+            </ul>
+        </div>
+
+        {# Card body. #}
+        <div class="card-body">
+            {% crispy form %}
+
+            <p class="h5">Total por día: {{ object.total_per_day }} - Días restantes: {{ object.days_left }}</p>
+
+            <hr>
+
+            {# Modal trigger button. #}
+            <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#staticBackdrop">Editar</button>
+
+            {# Go back button. #}
+            <a class="btn btn-secondary" href="{% url 'prescription_search' %}">Volver</a>
+
+            {# Check stock button. #}
+            <a class="btn btn-secondary" href="">Ver stock</a>
+
+            {# Modal. #}
+            <div class="modal fade" id="staticBackdrop" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="staticBackdropLabel">Confirmar edición</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        
+                        <div class="modal-body">
+                            Estás seguro de editar la información de la prescripción?
+                        </div>
+
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Volver</button>
+                            <button type="submit" class="btn btn-primary" form="id-MedicationForm">Guardar</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+  
+{% endblock %}

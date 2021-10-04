@@ -1,0 +1,66 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+	{# Stock card. #}
+	<div class="card">
+		
+		{# Card head and tabs. #}
+		<div class="card-header">
+			<ul class="nav nav-tabs card-header-tabs">
+				<li class="nav-item">
+					<a class="nav-link" href="{% url 'prescription_search' %}">Buscar</a>
+				</li>
+				<li class="nav-item">
+					<a class="nav-link active" href="{% url 'prescription_list' %}">Lista</a>
+				</li>
+				<li class="nav-item">
+					<a class="nav-link disabled" href="#" aria-disabled="true">Crear</a>
+				</li>
+				<li class="nav-item">
+					<a class="nav-link disabled" href="#" tabindex="-1" aria-disabled="true">Editar</a>
+				</li>
+			</ul>
+		</div>
+
+		{# Card body. #}
+		<div class="card-body">
+			<table class="table table-striped table-bordered" aria-describedby="datatable-buttons_info">
+
+				{# Prescription details. #}
+				Residente:
+				<p class="h5">{{ prescription.resident }}</p>
+				Medicación prescripta:
+				<p class="h5">{{ prescription.medication }}</p>
+			
+				<hr>
+				
+				{# Table headers. #}
+				<thead class="table-dark">
+					<tr>
+						<th scope="col">Fecha de ingreso</th>
+						<th scope="col">Medicación y dosis</th>
+						<th scope="col">Cantidad</th>
+						<th scope="col"></th>
+					</tr>
+				</thead>
+				
+				{# Table body. #}
+				<tbody>
+					{% for stock in prescription.stock_list %}
+					<tr>
+						<td>{{ stock.date }}</td>
+						<td>{{ stock.medication }}</td>
+						<td>{{ stock.avaliable }}</td>
+						<td>
+							<a href="#" class="btn btn-primary btn-sm" data-toggle="tooltip" title="Ajustar">
+								<i class="bi bi-pencil-square"></i>
+							</a>
+						</td>
+					</tr>
+					{% endfor %}
+				</tbody>
+			</table>
+		</div>
+	</div>
+{% endblock content %}

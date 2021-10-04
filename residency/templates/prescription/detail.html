@@ -1,0 +1,71 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+    {# Stock card. #}
+    <div class="card">
+            
+        {# Card head and tabs. #}
+        <div class="card-header">
+            <ul class="nav nav-tabs card-header-tabs">
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'prescription_search' %}">Buscar</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link active" href="{% url 'prescription_list' %}">Lista</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link disabled" href="#" aria-disabled="true">Crear</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link disabled" href="#" tabindex="-1" aria-disabled="true">Editar</a>
+                </li>
+            </ul>
+        </div>
+
+        {# Card body. #}
+        <div class="card-body">
+
+            {# Prescription details. #}
+            Residente:
+            <p class="h5">{{ prescription.resident }}</p>
+            Medicación prescripta:
+            <p class="h5">{{ prescription.medication }}</p>
+            Cantidad por día:
+            <p class="h5">{{ prescription.total_per_day }}</p>
+        
+            <hr>
+            
+            {% with prescription.avaliable_stock as stock %}
+                Stock disponible:
+                <p class="h5">{{ stock.medication }}</p>
+
+                <ul class="list-group list-group-flush">
+                    <li class="list-group-item">Desayuno: <b>{{ stock.meal_calculator.0 }}</b></li>
+                    <li class="list-group-item">Almuerzo: <b>{{ stock.meal_calculator.1 }}</b></li>
+                    <li class="list-group-item">Merienda: <b>{{ stock.meal_calculator.2 }}</b></li>
+                    <li class="list-group-item">Cena: <b>{{ stock.meal_calculator.3 }}</b></li>
+                </ul>
+
+            {% endwith %}
+
+            <br>
+
+            <a href="{% url 'prescription_update' prescription.pk %}" class="btn btn-primary" data-toggle="tooltip" title="Actualizar">
+                <i class="bi bi-pencil-square"></i> Actualizar
+            </a>
+            {# Check stock button. #}
+            <a href="{% url 'stock_detail' prescription.pk %}" class="btn btn-secondary" data-toggle="tooltip" title="Ver stock">
+                <i class="bi bi-card-list"></i> Ver stock
+            </a>
+        </div>
+    </div>
+
+
+    
+
+    <hr>
+
+    
+
+{% endblock content %}

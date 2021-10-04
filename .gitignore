@@ -1,0 +1,5 @@
+*.pyc
+media/
+static/
+db.sqlite3
+ayekan/settings.py
