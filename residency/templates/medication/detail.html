@@ -1,0 +1,90 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block content %}
+
+	{# Resident card. #}
+	<div class="card">
+		
+		{# Card head and tabs. #}
+		<div class="card-header">
+			<ul class="nav nav-tabs card-header-tabs">
+				<li class="nav-item">
+					<a class="nav-link" href="{% url 'medication_list' %}">Buscar</a>
+				</li>
+				<li class="nav-item">
+					<a class="nav-link active disabled" href="#">Detalle</a>
+				</li>
+				<li class="nav-item">
+					<a class="nav-link disabled" href="#">Crear</a>
+				</li>
+				<li class="nav-item">
+					<a class="nav-link disabled" href="#">Editar</a>
+				</li>
+			</ul>
+		</div>
+
+		{# Card body. #}
+		<div class="card-body">
+		
+			<p class="h4">Datos medicación
+				{# Update medication info button. #}
+				<a href="{% url 'medication_update' medication.pk %}" class="btn btn-link" data-toggle="tooltip" title="Actualizar">
+					<i class="bi bi-pencil-square"></i>
+				</a>
+			</p>
+
+			<hr>
+
+			{# Medication details. #}
+			<div class="row">
+				<div class="col-md-8">
+					<div class="row">
+						<div class="col-md">
+							Nombre de la droga:
+							<p class="h5">{{ medication.drug_name }}</p>
+						</div>
+                    </div>
+
+                    <div class="row">
+						<div class="col-md">
+							Nombre comercial:
+							<p class="h5">{{ medication.commercial_name }}</p>
+						</div>
+					</div>
+
+					<div class="row">
+						<div class="col-md">
+							Presentación:
+							<p class="h5">{{ medication.pharmaceutical_form }}</p>
+						</div>
+
+						<div class="col-md">
+							Cantidad:
+							<p class="h5">{{ medication.amount }}</p>
+						</div>
+
+                        <div class="col-md">
+							Unidad de medida:
+							<p class="h5">{{ medication.measurement_unit }}</p>
+						</div>
+					</div>
+				</div>
+				<div class="col-md mt-3">
+					{% if resident.picture %}
+						<img src="{{ resident.picture.url }}" class="rounded float-right" height="250" width="250" alt="">
+					{% else %}
+						<img src="{% static 'img/default-med.svg' %}" class="rounded float-right" height="250" width="250" alt="">
+					{% endif %}
+				</div>
+			</div>
+
+			<hr>
+
+			{# Go back button. #}
+            <a class="btn btn-secondary" href="javascript:history.go(-1)">
+				<i class="bi bi-arrow-return-left mr-2"></i> Volver
+			</a>
+		</div>
+	</div>
+{% endblock content %}
