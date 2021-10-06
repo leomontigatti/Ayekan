@@ -10,7 +10,7 @@
         <div class="card-header">
             <ul class="nav nav-tabs card-header-tabs">
                 <li class="nav-item">
-                    <a class="nav-link" href="{% url 'resident_search' %}">Buscar</a>
+                    <a class="nav-link" href="{% url 'resident_list' %}">Buscar</a>
                 </li>
                 <li class="nav-item">
 					<a class="nav-link disabled" href="#">Detalle</a>
@@ -26,7 +26,12 @@
 
         {# Card body. #}
         <div class="card-body">
-            <p class="h4">Datos residente</p>
+            <p class="h4">Datos residente
+                {# Tutor creation button. #}
+                <a href="{% url 'tutor_create' %}" class="btn btn-primary btn-sm ml-3">
+                    <i class="bi bi-person-plus mr-2"></i>Nuevo tutor
+                </a>
+            </p>
 
 			<hr>
 

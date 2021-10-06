@@ -78,6 +78,9 @@
 						<td>{{ medication.drug_name }}</td>
 						<td>{{ medication }}</td>
 						<td>
+                            <a href="{% url 'medication_detail' medication.pk %}" class="btn btn-link btn-sm" data-toggle="tooltip" title="Ver detalle">
+                                <i class="bi bi-eye"></i>
+                            </a>
 							<a href="{% url 'medication_update' medication.pk %}" class="btn btn-link btn-sm" data-toggle="tooltip" title="Actualizar">
 								<i class="bi bi-pencil-square"></i>
 							</a>

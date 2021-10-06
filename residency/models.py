@@ -50,6 +50,9 @@ class Resident(models.Model):
     
     def __str__(self):
         return f'{self.first_name} {self.last_name} / {self.nickname}'
+    
+    class Meta:
+        ordering = ['nickname']
         
     def get_absolute_url(self):
         return reverse('resident_list')
@@ -72,6 +75,9 @@ class Medication(models.Model):
     
     def __str__(self):
         return f'{self.commercial_name} {self.amount} {self.measurement_unit}'
+    
+    class Meta:
+        ordering = ['commercial_name']
     
     def get_absolute_url(self):
         return reverse('medication_search')

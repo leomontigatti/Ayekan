@@ -10,7 +10,7 @@
 		<div class="card-header">
 			<ul class="nav nav-tabs card-header-tabs">
 				<li class="nav-item">
-					<a class="nav-link" href="{% url 'resident_search' %}">Buscar</a>
+					<a class="nav-link" href="{% url 'resident_list' %}">Buscar</a>
 				</li>
 				<li class="nav-item">
 					<a class="nav-link active disabled" href="#">Detalle</a>
@@ -102,7 +102,7 @@
 					{% if resident.picture %}
 						<img src="{{ resident.picture.url }}" class="rounded float-right" height="250" width="250" alt="">
 					{% else %}
-						<img src="{% static 'img/default-profile.jpg' %}" class="rounded float-right" height="250" width="250" alt="">
+						<img src="{% static 'img/default-profile.svg' %}" class="rounded float-right" height="250" width="250" alt="">
 					{% endif %}
 				</div>
 			</div>

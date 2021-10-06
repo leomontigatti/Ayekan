@@ -149,6 +149,19 @@ class MedicationUpdateView(SuccessMessageMixin, UpdateView):
         return context
 
 
+class MedicationDetailView(DetailView):
+    # Shows a medication detail for printing.
+    
+    model = Medication
+    template_name = 'medication/detail.html'
+    context_object_name = 'medication'
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['active_page'] = 'medication'
+        return context
+
+
 # ------------------------------------------ Prescription stuff ------------------------------------------
 
 
