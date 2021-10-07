@@ -77,7 +77,7 @@ class Medication(models.Model):
         return f'{self.commercial_name} {self.amount} {self.measurement_unit}'
     
     class Meta:
-        ordering = ['commercial_name']
+        ordering = ['commercial_name', 'amount']
     
     def get_absolute_url(self):
         return reverse('medication_search')
