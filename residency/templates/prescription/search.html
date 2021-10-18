@@ -14,11 +14,6 @@
         {% endfor %}
     {% endif %}
 
-    {# Prescription creation button. #}
-	<a class="btn btn-primary" href="{% url 'prescription_create' %}">Nueva prescripción <i class="bi bi-eyedropper"></i></a>
-
-	<hr>
-
     {# Prescription card. #}
     <div class="card">
 
@@ -26,10 +21,10 @@
         <div class="card-header">
             <ul class="nav nav-tabs card-header-tabs">
                 <li class="nav-item">
-                    <a class="nav-link active" href="{% url 'prescription_search' %}">Buscar</a>
+                    <a class="nav-link active" href="{% url 'prescription_list' %}">Buscar</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="{% url 'prescription_list' %}">Lista</a>
+                    <a class="nav-link disabled" href="#">Detalle</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link disabled" href="#">Crear</a>
@@ -42,18 +37,60 @@
 
         {# Card body. #}
         <div class="card-body">
-            <h6 class="card-subtitle mb-2 text-muted">Buscar prescripción por residente, medicación o fecha</h6>
+            <h6 class="card-subtitle mb-2 text-muted">Buscar prescripción por residente, medicación o fecha
+                {# Prescription creation button. #}
+                <a href="{% url 'prescription_create' %}" class="btn btn-primary btn-sm ml-3">
+                    <i class="bi bi-card-list mr-2"></i>Nueva prescripción
+                </a>
+            </h6>
+
             <form action="{% url 'prescription_search' %}" method="POST">
                 {% csrf_token %}
 
                 <div class="input-group">
-                    <input type="text" name="imput_field" class="form-control">
+                    <input type="search" name="imput_field" class="form-control">
                     
-                    <div class="input-group-append">
-                        <button class="btn btn-primary" type="submit">Buscar <i class="bi bi-search"></i></button>
-                    </div>
+                    <span class="input-group-append">
+                        <button class="btn btn-primary" type="submit">
+                            <i class="bi bi-search"></i>
+                        </button>
+                    </span>
                 </div>
             </form>
+
+            <br>
+
+			<table class="table table-hover table-bordered">
+				
+				{# Table headers. #}
+				<thead class="table-dark">
+					<tr>
+						<th scope="col">Fecha de prescripción</th>
+						<th scope="col">Residente</th>
+						<th scope="col">Medicación y dosis</th>
+						<th scope="col">Acciones</th>
+					</tr>
+				</thead>
+				
+				{# Table body. #}
+				<tbody>
+					{% for prescription in prescription_list %}
+                        <tr>
+                            <td>{{ prescription.prescription_date }}</td>
+                            <td>{{ prescription.resident }}</td>
+                            <td>{{ prescription.medication }}</td>
+                            <td>
+                                <a href="{% url 'prescription_detail' prescription.pk %}" class="btn btn-link btn-sm" data-toggle="tooltip" title="Ver detalle">
+                                    <i class="bi bi-eye"></i>
+                                </a>
+                                <a href="{% url 'prescription_update' prescription.pk %}" class="btn btn-link btn-sm" data-toggle="tooltip" title="Actualizar">
+                                    <i class="bi bi-pencil-square"></i>
+                                </a>
+                            </td>
+                        </tr>
+					{% endfor %}
+				</tbody>
+			</table>
         </div>
     </div>
-{% endblock %}
+{% endblock content %}

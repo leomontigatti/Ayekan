@@ -10,10 +10,10 @@
         <div class="card-header">
             <ul class="nav nav-tabs card-header-tabs">
                 <li class="nav-item">
-                    <a class="nav-link" href="{% url 'prescription_search' %}">Buscar</a>
+                    <a class="nav-link" href="{% url 'prescription_list' %}">Buscar</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="{% url 'prescription_list' %}">Lista</a>
+                    <a class="nav-link disabled" href="#">Detalle</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link active disabled" href="#">Crear</a>
@@ -26,20 +26,30 @@
 
         {# Card body. #}
         <div class="card-body">
+            <p class="h4">
+                Datos prescripción
+            </p>
+
+            <hr>
+
             {% crispy form %}
 
             {# Go back button. #}
-            <a class="btn btn-secondary" href="{% url 'prescription_search' %}">Volver</a>
+            <a class="btn btn-secondary" href="javascript:history.go(-1)">
+				<i class="bi bi-arrow-return-left mr-2"></i>Volver
+			</a>
 
             {# Modal trigger button. #}
-            <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#staticBackdrop">Crear</button>
+            <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#staticBackdrop">
+                <i class="bi bi-save mr-2"></i>Guardar
+            </button>
 
             {# Modal. #}
             <div class="modal fade" id="staticBackdrop" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
                 <div class="modal-dialog">
                     <div class="modal-content">
                         <div class="modal-header">
-                            <h5 class="modal-title" id="staticBackdropLabel">Confirmar creación</h5>
+                            <h5 class="modal-title" id="staticBackdropLabel">Confirmar</h5>
                             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                 <span aria-hidden="true">&times;</span>
                             </button>
@@ -50,12 +60,16 @@
                         </div>
 
                         <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Volver</button>
-                            <button type="submit" class="btn btn-primary" form="id-PrescriptionForm">Guardar</button>
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">
+                                <i class="bi bi-arrow-return-left mr-2"></i>Volver
+                            </button>
+                            <button type="submit" class="btn btn-primary" form="id-PrescriptionForm">
+                                <i class="bi bi-check2 mr-2"></i>Confirmar
+                            </button>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-{% endblock %}
+{% endblock content %}
