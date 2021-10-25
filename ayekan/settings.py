@@ -41,7 +41,6 @@ INSTALLED_APPS = [
     
     # Local
     'crispy_forms',
-    'django_filters',
     'residency',
 ]
 
