@@ -121,30 +121,46 @@
 			{# Medical details. #}
 			<div class="row">
 				<div class="col-md">
-					Obra social y númerode afiliado:
-					<p class="h5">{{ resident.prepaid }} N° {{ resident.affiliation_number }}</p>
+					Obra social y número de afiliado:
+					<p class="h5">{{ resident.health_info.prepaid }} N° {{ resident.health_info.affiliation_number }}</p>
 				</div>
 			</div>
 
 			<div class="row">
 				<div class="col-md">
 					Vacuna antigripal 2020:
-					<p class="h5">algo1</p>
+					{% if resident.health_info.flu_vaccine_2020 %}
+						<p class="h5">{{ resident.health_info.flu_vaccine_2020 }}</p>
+					{% else %}
+						<p class="h5">Sin datos</p>
+					{% endif %}
 				</div>
 				
 				<div class="col-md">
 					Vacuna antigripal 2021:
-					<p class="h5">algo2</p>
+					{% if resident.health_info.flu_vaccine_2021 %}
+						<p class="h5">{{ resident.health_info.flu_vaccine_2021 }}</p>
+					{% else %}
+						<p class="h5">Sin datos</p>
+					{% endif %}
 				</div>
 
 				<div class="col-md">
-					Covid-19 Dosis 1:
-					<p class="h5">algo3</p>
+					Covid-19 primera dosis:
+					{% if resident.health_info.covid_dose1 %}
+						<p class="h5">{{ resident.health_info.covid_dose1 }}</p>
+					{% else %}
+						<p class="h5">Sin datos</p>
+					{% endif %}
 				</div>
 
 				<div class="col-md">
-					Covid-19 Dosis2:
-					<p class="h5">algo4</p>
+					Covid-19 segunda dosis:
+					{% if resident.health_info.covid_dose2 %}
+						<p class="h5">{{ resident.health_info.covid_dose2 }}</p>
+					{% else %}
+						<p class="h5">Sin datos</p>
+					{% endif %}
 				</div>
 			</div>
 

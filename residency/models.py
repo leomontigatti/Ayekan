@@ -22,27 +22,36 @@ class Resident(models.Model):
     
     status = models.CharField(max_length = 50, choices = [
         ('Activo', 'Activo'), ('Baja', 'Baja')], default = 'Activo')
-    admission_date = models.DateTimeField(auto_now_add = True)
-    nickname = models.CharField(max_length = 50, blank = True)
+    admission_date = models.DateField(auto_now_add = True)
+    nickname = models.CharField(max_length = 50, blank = True, null = True)
     first_name = models.CharField(max_length = 100)
     last_name = models.CharField(max_length = 100)
     birth_date = models.DateField(help_text = 'Formato AAAA-mm-dd')
     gender = models.CharField(max_length = 50, choices = [
-        ('Otro', 'Otro'), ('Masculino', 'Masculino'), ('Femenino', 'Femenino')], default = 0)
-    citizenship = models.CharField(max_length = 50, blank = True)
+        ('Otro', 'Otro'), ('Masculino', 'Masculino'), ('Femenino', 'Femenino')], default = 'Otro')
+    citizenship = models.CharField(max_length = 50, blank = True, null = True)
     marital_status = models.CharField(max_length = 50, choices = [
         ('Casado/a', 'Casado/a'), ('Divorciado/a', 'Divorciado/a'), ('Viudo/a', 'Viudo/a'), 
         ('Soltero/a', 'Soltero/a')], default = 'Casado/a')
-    address = models.CharField(max_length = 100, blank = True)
-    city = models.CharField(max_length = 100, blank = True)
+    address = models.CharField(max_length = 100, blank = True, null = True)
+    city = models.CharField(max_length = 100, blank = True, null = True)
     id_type = models.CharField(max_length = 50, choices = [
         ('DNI', 'DNI'), ('LC', 'LC'), ('LE', 'LE'), ('Pasaporte', 'Pasaporte')], default = 'DNI')
     id_number = models.CharField(max_length = 20, unique = True)
-    prepaid = models.ForeignKey(Prepaid, on_delete = models.PROTECT, default = 0)
-    affiliation_number = models.CharField(max_length = 100)
     last_modified = models.DateTimeField(auto_now = True)
     picture = models.ImageField(upload_to = 'resident/photos', blank = True, null = True)
     tutor = models.ForeignKey('Tutor', on_delete = models.PROTECT, related_name = 'resident')
+    room_type = models.CharField(max_length = 50, choices = [
+        ('Doble', 'Doble'), ('Simple', 'Simple'), ('Triple', 'Triple'), 
+        ('Simple B/Privado', 'Simple B/Privado')], default = 'Simple')
+    floor = models.CharField(max_length = 50, choices = [
+        ('Planta baja', 'Planta baja'), ('Planta alta', 'Planta alta')], default = 'Planta baja')
+    bed = models.CharField(max_length = 50, blank = True, null = True)
+    room_number = models.CharField(max_length = 50, blank = True, null = True)
+    drop_date = models.DateField(help_text = 'Formato AAAA-mm-dd', blank = True, null = True)
+    re_enter_date = models.DateField(help_text = 'Formato AAAA-mm-dd', blank = True, null = True)
+    decease_date = models.DateField(help_text = 'Formato AAAA-mm-dd', blank = True, null = True)
+    health_info = models.OneToOneField('HealthInfo', on_delete = models.CASCADE)
     
     def age(self):
         age = date.today().year - self.birth_date.year
@@ -56,6 +65,25 @@ class Resident(models.Model):
         
     def get_absolute_url(self):
         return reverse('resident_list')
+    
+    
+class HealthInfo(models.Model):
+    # Resident's health related information model.
+    
+    prepaid = models.ForeignKey(Prepaid, on_delete = models.PROTECT, default = 0)
+    affiliation_number = models.CharField(max_length = 100)
+    flu_vaccine_2020 = models.DateField(help_text = 'Formato AAAA-mm-dd', blank = True, null = True)
+    flu_vaccine_2021 = models.DateField(help_text = 'Formato AAAA-mm-dd', blank = True, null = True)
+    covid_dose1 = models.DateField(help_text = 'Formato AAAA-mm-dd', blank = True, null = True)
+    covid_dose2 = models.DateField(help_text = 'Formato AAAA-mm-dd', blank = True, null = True)
+    weight = models.CharField(max_length = 50, blank = True, null = True)
+    height = models.CharField(max_length = 50, blank = True, null = True)
+    bmi = models.CharField(max_length = 50, blank = True, null = True)
+    allergies = models.CharField(max_length = 200, blank = True, null = True)
+    diabetes = models.BooleanField(default = False)
+    hypertension = models.BooleanField(default = False)
+    oncological = models.CharField(max_length = 200, blank = True, null = True)
+    survival_certificate = models.BooleanField(default = False)
 
 
 class Medication(models.Model):
@@ -92,7 +120,7 @@ class Prescription(models.Model):
     lunch = models.FloatField(default = 0)
     tea = models.FloatField(default = 0)
     dinner = models.FloatField(default = 0)
-    notes = models.TextField(max_length = 500, blank = True)
+    notes = models.TextField(max_length = 500, blank = True, null = True)
     medication_status = models.CharField(max_length = 50, choices = [
         ('Activo', 'Activo'), ('Suspendido', 'Suspendido'), ('SOS', 'SOS')], default = 'Activo')
     prescription_date = models.DateField(help_text = 'Formato AAAA-mm-dd')
@@ -174,11 +202,22 @@ class Tutor(models.Model):
 
     first_name = models.CharField(max_length = 100)
     last_name = models.CharField(max_length = 100)
-    phone_number = models.CharField(max_length = 100)
-    email = models.EmailField(max_length = 100, blank = True)
-    address = models.CharField(max_length = 100, blank = True)
-    city = models.CharField(max_length = 100, blank = True)
-    billing_info = models.CharField(max_length = 20, unique = True)
+    age = models.CharField(max_length = 10, blank = True, null = True)
+    gender = models.CharField(max_length = 50, choices = [
+        ('Otro', 'Otro'), ('Masculino', 'Masculino'), ('Femenino', 'Femenino')], default = 'Otro')
+    citizenship = models.CharField(max_length = 50, blank = True, null = True)
+    marital_status = models.CharField(max_length = 50, choices = [
+        ('Casado/a', 'Casado/a'), ('Divorciado/a', 'Divorciado/a'), ('Viudo/a', 'Viudo/a'), 
+        ('Soltero/a', 'Soltero/a')], default = 'Casado/a')
+    id_type = models.CharField(max_length = 50, choices = [
+        ('DNI', 'DNI'), ('LC', 'LC'), ('LE', 'LE'), ('Pasaporte', 'Pasaporte')], default = 'DNI')
+    id_number = models.CharField(max_length = 20, unique = True)
+    phone_number = models.CharField(max_length = 200)
+    email = models.EmailField(max_length = 100, blank = True, null = True)
+    profession = models.CharField(max_length = 100, blank = True, null = True)
+    address = models.CharField(max_length = 100, blank = True, null = True)
+    city = models.CharField(max_length = 100, blank = True, null = True)
+    billing_info = models.CharField(max_length = 100, blank = True, null = True)
     
     def __str__(self):
         return f'{self.first_name} {self.last_name}'

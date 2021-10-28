@@ -49,8 +49,6 @@ class ResidentCreateForm(ModelForm):
             Row(
                 Column('id_type', css_class = 'form-group col-md-2'),
                 Column('id_number', css_class = 'form-group col-md-4'),
-                Column('prepaid', css_class = 'form-group col-md-2'),
-                Column('affiliation_number', css_class = 'form-group col-md-4'),
                 css_class = 'form-row'
             ),
         )
@@ -61,7 +59,7 @@ class ResidentCreateForm(ModelForm):
         fields = (
             'status', 'picture', 'nickname', 'first_name', 'last_name', 'birth_date', 'gender',
             'citizenship', 'marital_status', 'address', 'city', 'id_type', 'id_number',
-            'prepaid', 'affiliation_number', 'tutor',
+            'tutor',
         )
         labels = {
             'status': 'Estado', 'picture': 'Foto',
@@ -70,7 +68,6 @@ class ResidentCreateForm(ModelForm):
             'citizenship': 'Ciudadanía', 'marital_status': 'Estado civil',
             'address': 'Domicilio', 'city': 'Ciudad',
             'id_type': 'Tipo de documento', 'id_number': 'Número de documento',
-            'prepaid': 'Obra social', 'affiliation_number': 'Número de afiliado',
             'tutor': 'Tutor'
         }
 

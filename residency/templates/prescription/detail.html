@@ -43,6 +43,12 @@
             <p class="h5">{{ prescription.medication }}</p>
             Cantidad por día:
             <p class="h5">{{ prescription.total_per_day }}</p>
+            En pastillero:
+            {% if prescription.in_pillbox == 1 %}
+                <p class="h5">Si</p>
+            {% else %}
+                <p class="h5">No</p>
+            {% endif %}
         
             <hr>
             
