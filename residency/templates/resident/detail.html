@@ -184,7 +184,11 @@
 				
 				<div class="col-md">
 					DNI / CUIT Facturación:
-					<p class="h5">{{ resident.tutor.billing_info }}</p>
+					{% if resident.tutor.billing_info %}
+						<p class="h5">{{ resident.tutor.billing_info }}</p>
+					{% else %}
+						<p class="h5">Sin datos</p>
+					{% endif %}
 				</div>
 			</div>
 
@@ -201,7 +205,11 @@
 				</div>
 				<div class="col-md">
 					E-mail:
-					<p class="h5">{{ resident.tutor.email }}</p>
+					{% if resident.tutor.email %}
+						<p class="h5">{{ resident.tutor.email }}</p>
+					{% else %}
+						<p class="h5">Sin datos</p>
+					{% endif %}
 				</div>
 			</div>
 
