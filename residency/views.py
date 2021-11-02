@@ -43,6 +43,9 @@ class ResidentListView(ListView):
     context_object_name = 'resident_list'
     template_name = 'resident/list.html'
     
+    def get_queryset(self):
+        return Resident.objects.filter(status = 'Activo')
+    
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['active_page'] = 'resident'
