@@ -40,7 +40,7 @@ class Resident(models.Model):
     id_number = models.CharField(max_length = 20, unique = True)
     last_modified = models.DateTimeField(auto_now = True)
     picture = models.ImageField(upload_to = 'resident/photos', blank = True, null = True)
-    tutor = models.ForeignKey('Tutor', on_delete = models.PROTECT, related_name = 'resident')
+    tutor = models.ManyToManyField('Tutor')
     room_type = models.CharField(max_length = 50, choices = [
         ('Doble', 'Doble'), ('Simple', 'Simple'), ('Triple', 'Triple'), 
         ('Simple B/Privado', 'Simple B/Privado')], default = 'Simple')
@@ -56,6 +56,9 @@ class Resident(models.Model):
     def age(self):
         age = date.today().year - self.birth_date.year
         return age
+    
+    def tutor_list(self):
+        return self.tutor.all()
     
     def __str__(self):
         return f'{self.first_name} {self.last_name} / {self.nickname}'

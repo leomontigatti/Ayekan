@@ -59,7 +59,7 @@ class ResidentCreateForm(ModelForm):
         fields = (
             'status', 'picture', 'nickname', 'first_name', 'last_name', 'birth_date', 'gender',
             'citizenship', 'marital_status', 'address', 'city', 'id_type', 'id_number',
-            'tutor',
+            'tutor'
         )
         labels = {
             'status': 'Estado', 'picture': 'Foto',

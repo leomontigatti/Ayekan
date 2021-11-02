@@ -166,66 +166,70 @@
 
 			<hr>
 
-			<p class="h4">Datos tutor
-				{# Update resident tutor info button. #}
-				<a href="{% url 'tutor_update' resident.tutor.pk %}" class="btn btn-link" data-toggle="tooltip" title="Actualizar">
-					<i class="bi bi-pencil-square"></i>
-				</a>
-			</p>
+			{% for tutor in resident.tutor_list %}
 
-			<hr>
+				<p class="h4">Datos tutor
+					{# Update resident's tutor info button. #}
+					<a href="{% url 'tutor_update' tutor.pk %}" class="btn btn-link" data-toggle="tooltip" title="Actualizar">
+						<i class="bi bi-pencil-square"></i>
+					</a>
+				</p>
 
-			{# Resident details. #}
-			<div class="row">
-				<div class="col-md">
-					Nombre y apellido:
-					<p class="h5">{{ resident.tutor }}</p>
+				<hr>
+
+				{# Tutor details. #}
+				<div class="row">
+					<div class="col-md">
+						Nombre y apellido:
+						<p class="h5">{{ tutor }}</p>
+					</div>
+					
+					<div class="col-md">
+						DNI / CUIT Facturación:
+						{% if tutor.billing_info %}
+							<p class="h5">{{ tutor.billing_info }}</p>
+						{% else %}
+							<p class="h5">Sin datos</p>
+						{% endif %}
+					</div>
 				</div>
+
+				<div class="row">
+					<div class="col-md">
+						Teléfono:
+						<p class="h5">
+							{{ tutor.phone_number }}
+							<a href="https://wa.me/549{{ tutor.phone_number }}" target="_blank" rel="noopener noreferrer" class="btn btn-link"
+							data-toggle="tooltip" title="Whatsapp">
+								<i class="bi bi-whatsapp align-baseline" style="color:mediumseagreen;"></i>
+							</a>
+						</p>
+					</div>
+					<div class="col-md">
+						E-mail:
+						{% if tutor.email %}
+							<p class="h5">{{ tutor.email }}</p>
+						{% else %}
+							<p class="h5">Sin datos</p>
+						{% endif %}
+					</div>
+				</div>
+
+				<div class="row">
+					<div class="col-md">
+						Domicilio:
+						<p class="h5">{{ tutor.address }}</p>
+					</div>
+					
+					<div class="col-md">
+						Ciudad:
+						<p class="h5">{{ tutor.city }}</p>
+					</div>
+				</div>
+
+				<hr>
 				
-				<div class="col-md">
-					DNI / CUIT Facturación:
-					{% if resident.tutor.billing_info %}
-						<p class="h5">{{ resident.tutor.billing_info }}</p>
-					{% else %}
-						<p class="h5">Sin datos</p>
-					{% endif %}
-				</div>
-			</div>
-
-			<div class="row">
-				<div class="col-md">
-					Teléfono:
-					<p class="h5">
-						{{ resident.tutor.phone_number }}
-						<a href="https://wa.me/549{{ resident.tutor.phone_number }}" target="_blank" rel="noopener noreferrer" class="btn btn-link"
-						data-toggle="tooltip" title="Whatsapp">
-							<i class="bi bi-whatsapp align-baseline" style="color:mediumseagreen;"></i>
-						</a>
-					</p>
-				</div>
-				<div class="col-md">
-					E-mail:
-					{% if resident.tutor.email %}
-						<p class="h5">{{ resident.tutor.email }}</p>
-					{% else %}
-						<p class="h5">Sin datos</p>
-					{% endif %}
-				</div>
-			</div>
-
-			<div class="row">
-				<div class="col-md">
-					Domicilio:
-					<p class="h5">{{ resident.tutor.address }}</p>
-				</div>
-				
-				<div class="col-md">
-					Ciudad:
-					<p class="h5">{{ resident.tutor.city }}</p>
-				</div>
-			</div>
-
-			<hr>
+			{% endfor %}
 
 			{# Go back button. #}
             <a class="btn btn-secondary" href="javascript:history.go(-1)">
