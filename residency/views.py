@@ -64,6 +64,10 @@ class ResidentCreateView(SuccessMessageMixin, CreateView):
         context = super().get_context_data(**kwargs)
         context['active_page'] = 'resident'
         return context
+    
+    def get_success_url(self):
+        pk = Resident.objects.latest('last_modified').pk
+        return reverse('resident_detail', kwargs = {'pk': pk})
 
 
 class ResidentUpdateView(SuccessMessageMixin, UpdateView):
