@@ -2,18 +2,6 @@
 
 {% block content %}
 
-    {# Success messages. #}
-    {% if messages %}
-        {% for message in messages %}
-            <div class="alert alert-success" role="alert">
-                {{ message }}
-                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-        {% endfor %}
-    {% endif %}
-
     {# Resident card. #}
     <div class="card">
 
@@ -76,7 +64,11 @@
 				<tbody id="tbody">
 					{% for resident in resident_list %}
 						<tr>
-							<td>{{ resident.nickname }}</td>
+							<td>
+                                {% if resident.nickname %}
+                                    {{ resident.nickname }}
+                                {% endif %}
+                            </td>
 							<td>{{ resident.first_name }}</td>
 							<td>{{ resident.last_name }}</td>
 							<td>
