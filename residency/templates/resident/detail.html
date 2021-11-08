@@ -39,100 +39,177 @@
 		{# Card body. #}
 		<div class="card-body">
 
+			<p class="h4 mb-0">Datos residente
+				{# Update resident info button. #}
+				<a href="{% url 'resident_update' resident.pk %}" class="btn btn-link" data-toggle="tooltip" title="Actualizar">
+					<i class="bi bi-pencil-square"></i>
+				</a>
+			</p>
+
+			<hr>
+
+			{# Resident details. #}
+			<div class="row">
+				<div class="col-md-8">
+					<div class="row">
+						<div class="col-md-3">
+							Estado:
+							{% if resident.status == 'Activo' %}
+								<p class="h5 text-success">{{ resident.status }}</p>
+							{% else %}
+								<p class="h5 text-danger">{{ resident.status }}</p>
+							{% endif %}
+						</div>
+
+						<div class="col-md">
+							Fecha de admisión:
+							<p class="h5">{{ resident.admission_date }}</p>
+						</div>
+					</div>
+
+					<div class="row">
+						<div class="col-md-3">
+							Apodo:
+							{% if resident.nickname %}
+								<p class="h5">{{ resident.nickname }}</p>
+							{% else %}
+								<p class="h5"> </p>
+							{% endif %}
+						</div>
+
+						<div class="col-md">
+							Apellido y nombre:
+							<p class="h5">{{ resident.last_name }}, {{ resident.first_name }}</p>
+						</div>
+					</div>
+
+					<div class="row">
+						<div class="col-md-8">
+							Fecha de nacimiento:
+							<p class="h5">{{ resident.birth_date }}</p>
+						</div>
+
+						<div class="col">
+							Edad:
+							<p class="h5">{{ resident.calculate_age }} años</p>
+						</div>
+					</div>
+
+					<div class="row">
+						<div class="col-md-8">
+							Último domicilio:
+							{% if resident.address %}
+								<p class="h5">{{ resident.address }}</p>
+							{% else %}
+								<p class="h5"> </p>
+							{% endif %}
+						</div>
+
+						<div class="col-md">
+							Ciudad:
+							{% if resident.city %}
+								<p class="h5">{{ resident.city }}</p>
+							{% else %}
+								<p class="h5"> </p>
+							{% endif %}
+						</div>
+					</div>
+
+					<div class="row">
+						<div class="col-md">
+							Tipo y número de documento:
+							<p class="h5">{{ resident.id_type }} N° {{ resident.id_number }}</p>
+						</div>
+					</div>
+				</div>
+				<div class="col-md mt-3">
+					{% if resident.picture %}
+						<img src="{{ resident.picture.url }}" class="rounded float-right" height="250" width="250" alt="">
+					{% else %}
+						<img src="{% static 'img/default-profile.svg' %}" class="rounded float-right" height="250" width="250" alt="">
+					{% endif %}
+				</div>
+			</div>
+
+			<br>
+
 			<div class="accordion" id="accordionExample">
 				<div class="card">
-				  	<div class="card-header" id="headingOne">
-						<button class="btn btn-block text-left" type="button" data-toggle="collapse" data-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
-							<p class="h4 mb-0">Datos residente
-								{# Update resident info button. #}
-								<a href="{% url 'resident_update' resident.pk %}" class="btn btn-link" data-toggle="tooltip" title="Actualizar">
+				  	<div class="card-header" id="headingTwo">
+						<button class="btn btn-block text-left pt-0 pb-0 pl-0 pr-0" type="button" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+							<p class="h5 mb-0">Datos médicos
+								{# Update medical information button. #}
+								<a href="{% url 'healthinfo_update' resident.pk %}" class="btn btn-link" data-toggle="tooltip" title="Actualizar">
 									<i class="bi bi-pencil-square"></i>
 								</a>
 							</p>
 						</button>
 				  	</div>
-			  
-					<div id="collapseOne" class="collapse show" aria-labelledby="headingOne" data-parent="#accordionExample">
+					
+					<div id="collapseTwo" class="collapse show" aria-labelledby="headingTwo" data-parent="#accordionExample">
 						<div class="card-body">
-							{# Resident details. #}
+							{# Medical details. #}
 							<div class="row">
-								<div class="col-md-8">
-									<div class="row">
-										<div class="col-md-3">
-											Estado:
-											{% if resident.status == 'Activo' %}
-												<p class="h5 text-success">{{ resident.status }}</p>
-											{% else %}
-												<p class="h5 text-danger">{{ resident.status }}</p>
-											{% endif %}
-										</div>
-
-										<div class="col-md">
-											Fecha de admisión:
-											<p class="h5">{{ resident.admission_date }}</p>
-										</div>
-									</div>
-
-									<div class="row">
-										<div class="col-md-3">
-											Apodo:
-											{% if resident.nickname %}
-												<p class="h5">{{ resident.nickname }}</p>
-											{% else %}
-												<p class="h5"> </p>
-											{% endif %}
-										</div>
-
-										<div class="col-md">
-											Apellido y nombre:
-											<p class="h5">{{ resident.last_name }}, {{ resident.first_name }}</p>
-										</div>
-									</div>
-
-									<div class="row">
-										<div class="col-md-8">
-											Fecha de nacimiento:
-											<p class="h5">{{ resident.birth_date }}</p>
-										</div>
-
-										<div class="col">
-											Edad:
-											<p class="h5">{{ resident.calculate_age }} años</p>
-										</div>
-									</div>
-
-									<div class="row">
-										<div class="col-md-8">
-											Último domicilio:
-											{% if resident.address %}
-												<p class="h5">{{ resident.address }}</p>
-											{% else %}
-												<p class="h5"> </p>
-											{% endif %}
-										</div>
-
-										<div class="col-md">
-											Ciudad:
-											{% if resident.city %}
-												<p class="h5">{{ resident.city }}</p>
-											{% else %}
-												<p class="h5"> </p>
-											{% endif %}
-										</div>
-									</div>
-
-									<div class="row">
-										<div class="col-md">
-											Tipo y número de documento:
-											<p class="h5">{{ resident.id_type }} N° {{ resident.id_number }}</p>
-										</div>
-									</div>
+								<div class="col-md">
+									Obra social y número de afiliado:
+									<p class="h5">{{ resident.prepaid }} N° {{ resident.affiliation_number }}</p>
 								</div>
-								<div class="col-md mt-3">
-									{% if resident.picture %}
-										<img src="{{ resident.picture.url }}" class="rounded float-right" height="250" width="250" alt="">
+							</div>
+
+							<div class="row">
+								<div class="col-md">
+									Vacunas:
+									{% if resident.vaccines %}
+										<p class="h5">{{ resident.vaccines }}</p>
 									{% else %}
-										<img src="{% static 'img/default-profile.svg' %}" class="rounded float-right" height="250" width="250" alt="">
+										<p class="h5"> </p>
+									{% endif %}
+								</div>
+
+								<div class="col-md">
+									Notas:
+									{% if resident.notes %}
+										<p class="h5">{{ resident.notes }}</p>
+									{% else %}
+										<p class="h5"> </p>
+									{% endif %}
+								</div>
+							</div>
+
+							<div class="row">
+								<div class="col-md">
+									Peso:
+									{% if resident.weight %}
+										<p class="h5">{{ resident.weight }}</p>
+									{% else %}
+										<p class="h5"> </p>
+									{% endif %}
+								</div>
+
+								<div class="col-md">
+									Altura:
+									{% if resident.height %}
+										<p class="h5">{{ resident.height }}</p>
+									{% else %}
+										<p class="h5"> </p>
+									{% endif %}
+								</div>
+
+								<div class="col-md">
+									IMC:
+									{% if resident.bmi %}
+										<p class="h5">{{ resident.bmi }}</p>
+									{% else %}
+										<p class="h5"> </p>
+									{% endif %}
+								</div>
+
+								<div class="col-md">
+									Certificado de supervivencia:
+									{% if resident.survival_certificate %}
+										<p class="h5">Si</p>
+									{% else %}
+										<p class="h5">No</p>
 									{% endif %}
 								</div>
 							</div>
@@ -140,42 +217,12 @@
 					</div>
 				</div>
 
-				<div class="card">
-				  	<div class="card-header" id="headingTwo">
-						<button class="btn btn-block text-left collapsed" type="button" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
-							<p class="h4 mb-0">Datos médicos
-								{# Update medical information button. #}
-								<a href="{% url 'resident_update' resident.pk %}" class="btn btn-link" data-toggle="tooltip" title="Actualizar">
-									<i class="bi bi-pencil-square"></i>
-								</a>
-							</p>
-						</button>
-				  	</div>
-					
-					<div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionExample">
-						<div class="card-body">
-							{# Medical details. #}
-							<div class="row">
-								<div class="col-md">
-									Obra social y número de afiliado:
-								</div>
-							</div>
-
-							<div class="row">
-								<div class="col-md">
-									Vacunas:
-								</div>
-							</div>
-						</div>
-					</div>
-				</div>
-				
 				{% for tutor in resident.tutor_list %}
 
 				<div class="card">
-				  	<div class="card-header" id="headingThree">
-						<button class="btn btn-block text-left collapsed" type="button" data-toggle="collapse" data-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
-						<p class="h4 mb-0">Datos tutor
+				  	<div class="card-header" id="heading{{ forloop.counter }}">
+						<button class="btn btn-block text-left collapsed pt-0 pb-0 pl-0 pr-0" type="button" data-toggle="collapse" data-target="#collapse{{ forloop.counter }}" aria-expanded="false" aria-controls="collapse{{ forloop.counter }}">
+						<p class="h5 mb-0">Datos tutor {{ forloop.counter }}
 							{# Update resident's tutor info button. #}
 							<a href="{% url 'tutor_update' tutor.pk %}" class="btn btn-link" data-toggle="tooltip" title="Actualizar">
 							<i class="bi bi-pencil-square"></i>
@@ -184,7 +231,7 @@
 						</button>
 				  	</div>
 
-				  	<div id="collapseThree" class="collapse" aria-labelledby="headingThree" data-parent="#accordionExample">
+				  	<div id="collapse{{ forloop.counter }}" class="collapse" aria-labelledby="heading{{ forloop.counter }}" data-parent="#accordionExample">
 						<div class="card-body">
 							{# Tutor details. #}
 							<div class="row">
@@ -253,7 +300,7 @@
 			<br>
 
 			{# Go back button. #}
-            <a class="btn btn-secondary" href="javascript:history.go(-1)">
+            <a class="btn btn-secondary" href="{% url 'resident_list' %}">
 				<i class="bi bi-arrow-return-left mr-2"></i>Volver
 			</a>
 		</div>

@@ -1,7 +1,7 @@
 # Residency forms.
 
 # Django.
-from django.forms import ModelForm
+from django.forms import ModelForm, Textarea
 from crispy_forms.helper import FormHelper
 from crispy_forms.layout import Layout, Row, Column
 
@@ -65,10 +65,58 @@ class ResidentCreateForm(ModelForm):
             'status': 'Estado', 'picture': 'Foto',
             'nickname': 'Apodo', 'first_name': 'Nombre', 'last_name': 'Apellido',
             'birth_date': 'Fecha de nacimiento', 'gender': 'Género', 
-            'citizenship': 'Ciudadanía', 'marital_status': 'Estado civil',
+            'citizenship': 'Nacionalidad', 'marital_status': 'Estado civil',
             'address': 'Domicilio', 'city': 'Ciudad',
             'id_type': 'Tipo de documento', 'id_number': 'Número de documento',
             'tutor': 'Tutor'
+        }
+
+
+class HealthInfoCreateForm(ModelForm):
+    # Creates a form to add a resident's health information.
+    
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.helper = FormHelper()
+        self.helper.form_id = 'id-HealthInfoForm'
+        self.helper.form_class = 'row-g3 needs-validation'
+        self.helper.form_method = 'post'
+        self.helper.attrs = {'novalidate' : ''}
+        self.helper.layout = Layout(
+            Row(
+                Column('prepaid', css_class = 'form-group col'),
+                Column('affiliation_number', css_class = 'form-group col'),
+                css_class = 'form-row'
+            ),
+            Row(
+                Column('vaccines', css_class = 'form-group col-md'),
+                Column('notes', css_class = 'form-group col-md'),
+                css_class = 'form-row'
+            ),
+            Row(
+                Column('weight', css_class = 'form-group col-md'),
+                Column('height', css_class = 'form-group col-md'),
+                Column('bmi', css_class = 'form-group col-md'),
+                Column('survival_certificate', css_class = 'form-group col-md'),
+                css_class = 'form-row'
+            ),
+        )
+    
+    
+    class Meta:
+        model = Resident
+        fields = (
+            'prepaid', 'affiliation_number', 'vaccines', 'notes', 'weight', 'height',
+            'bmi', 'survival_certificate',
+        )
+        labels = {
+            'prepaid': 'Obra social', 'affiliation_number': 'Número de afiliado',
+            'vaccines': 'Vacunas', 'notes': 'Notas', 'weight': 'Peso', 'height': 
+            'Altura', 'bmi': 'IMC', 'survival_certificate': 'Certificado de supervivencia'
+        }
+        widgets = {
+            'vaccines': Textarea(attrs={'rows': 4, 'placeholder': 'Fecha y detalle'}),
+            'notes': Textarea(attrs={'rows': 4})
         }
 
 
@@ -160,9 +208,10 @@ class PrescriptionCreateForm(ModelForm):
             'in_pillbox': 'En pastillero', 'breakfast': 'Desayuno', 'lunch': 'Almuerzo', 
             'tea': 'Merienda', 'dinner': 'Cena', 'notes': 'Notas'
         }
-        # widgets = {
-        #     'total_per_day': forms.NumberInput(attrs = {'readonly': True})
-        # }
+        widgets = {
+            # 'total_per_day': NumberInput(attrs = {'readonly': True})
+            'notes': Textarea(attrs={'rows': 4})
+        }
 
 
 class StockCreateForm(ModelForm):
@@ -210,9 +259,17 @@ class TutorCreateForm(ModelForm):
         self.helper.attrs = {'novalidate' : ''}
         self.helper.layout = Layout(
             Row(
-                Column('first_name', css_class = 'form-group col-md-5'),
-                Column('last_name', css_class = 'form-group col-md-5'),
+                Column('first_name', css_class = 'form-group col-md'),
+                Column('last_name', css_class = 'form-group col-md'),
                 css_class = 'form-row'
+            ),
+            Row(
+                Column('id_type', css_class = 'form-group col-md-2'),
+                Column('id_number', css_class = 'form-group col-md'),
+                Column('age', css_class = 'form-group col-md'),
+                Column('gender', css_class = 'form-group col-md'),
+                Column('marital_status', css_class = 'form-group col-md'),
+                css_class = 'form-row',
             ),
             Row(
                 Column('phone_number', css_class = 'form-group col-md-4'),
@@ -225,16 +282,25 @@ class TutorCreateForm(ModelForm):
                 Column('city', css_class = 'form-group col-md-6'),
                 css_class = 'form-row'
             ),
+            Row(
+                Column('citizenship', css_class = 'form-group col-md-6'),
+                Column('profession', css_class = 'form-group col-md-6'),
+                css_class = 'form-row'
+            ),
         )
     
     
     class Meta:
         model = Tutor
         fields = (
-            'first_name', 'last_name', 'phone_number', 'email', 'billing_info',
-            'address', 'city'
+            'first_name', 'last_name', 'phone_number', 'email', 'billing_info', 'id_type',
+            'address', 'city', 'age', 'gender', 'citizenship', 'marital_status', 'id_number',
+            'profession'
         )
         labels = {
             'first_name': 'Nombre', 'last_name': 'Apellido', 'phone_number': 'Número de teléfono',
-            'email': 'Email', 'billing_info': 'DNI / CUIT', 'address': 'Domicilio', 'city': 'Ciudad'
+            'email': 'Email', 'billing_info': 'CUIT facturación', 'id_type': 'Tipo de documento',
+            'address': 'Domicilio', 'city': 'Ciudad', 'age': 'Edad', 'gender': 'Género',
+            'citizenship': 'Nacionalidad', 'marital_status': 'Estado civil', 'id_number':
+            'Número de documento', 'profession': 'Profesión'
         }

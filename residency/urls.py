@@ -17,6 +17,7 @@ urlpatterns = [
     path('resident/create/', views.ResidentCreateView.as_view(), name = 'resident_create'),
     path('resident/<int:pk>/update/', views.ResidentUpdateView.as_view(), name = 'resident_update'),
     path('resident/<int:pk>/detail/', views.ResidentDetailView.as_view(), name = 'resident_detail'),
+    path('resident/<int:pk>/hiupdate/', views.HealthInfoUpdateView.as_view(), name = 'healthinfo_update'),    
     
     # Medication paths.
     path('medication/search/', views.medication_search, name = 'medication_search'),

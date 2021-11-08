@@ -26,7 +26,7 @@ class Resident(models.Model):
     nickname = models.CharField(max_length = 50, blank = True, null = True)
     first_name = models.CharField(max_length = 100)
     last_name = models.CharField(max_length = 100)
-    birth_date = models.DateField(help_text = 'Formato AAAA-mm-dd')
+    birth_date = models.DateField()
     gender = models.CharField(max_length = 50, choices = [
         ('Otro', 'Otro'), ('Masculino', 'Masculino'), ('Femenino', 'Femenino')], default = 'Otro')
     citizenship = models.CharField(max_length = 50, blank = True, null = True)
@@ -48,9 +48,9 @@ class Resident(models.Model):
         ('Planta baja', 'Planta baja'), ('Planta alta', 'Planta alta')], default = 'Planta baja')
     bed = models.CharField(max_length = 50, blank = True, null = True)
     room_number = models.CharField(max_length = 50, blank = True, null = True)
-    drop_date = models.DateField(help_text = 'Formato AAAA-mm-dd', blank = True, null = True)
-    re_enter_date = models.DateField(help_text = 'Formato AAAA-mm-dd', blank = True, null = True)
-    decease_date = models.DateField(help_text = 'Formato AAAA-mm-dd', blank = True, null = True)
+    drop_date = models.DateField(blank = True, null = True)
+    re_enter_date = models.DateField(blank = True, null = True)
+    decease_date = models.DateField(blank = True, null = True)
     
     # Health related information.
     
@@ -71,7 +71,10 @@ class Resident(models.Model):
         return self.tutor.all()
     
     def __str__(self):
-        return f'{self.last_name}, {self.first_name} / {self.nickname}'
+        if self.nickname:
+            return f'{self.last_name}, {self.first_name} / {self.nickname}'
+        else:
+            return f'{self.last_name}, {self.first_name}'
     
     class Meta:
         ordering = ['nickname']
@@ -207,7 +210,7 @@ class Tutor(models.Model):
     id_type = models.CharField(max_length = 50, choices = [
         ('DNI', 'DNI'), ('LC', 'LC'), ('LE', 'LE'), ('Pasaporte', 'Pasaporte')], default = 'DNI')
     id_number = models.CharField(max_length = 20, unique = True)
-    phone_number = models.CharField(max_length = 200)
+    phone_number = models.CharField(max_length = 200, help_text = 'Código de area sin 0 y número sin 15')
     email = models.EmailField(max_length = 100, blank = True, null = True)
     profession = models.CharField(max_length = 100, blank = True, null = True)
     address = models.CharField(max_length = 100, blank = True, null = True)

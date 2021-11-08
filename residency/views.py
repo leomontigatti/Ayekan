@@ -82,6 +82,10 @@ class ResidentUpdateView(SuccessMessageMixin, UpdateView):
         context = super().get_context_data(**kwargs)
         context['active_page'] = 'resident'
         return context
+    
+    def get_success_url(self):
+        pk = Resident.objects.latest('last_modified').pk
+        return reverse('resident_detail', kwargs = {'pk': pk})
 
 
 class ResidentDetailView(DetailView):
@@ -95,6 +99,24 @@ class ResidentDetailView(DetailView):
         context = super().get_context_data(**kwargs)
         context['active_page'] = 'resident'
         return context
+
+
+class HealthInfoUpdateView(SuccessMessageMixin, UpdateView):
+    # Updates an existing resident.
+    
+    model = Resident
+    form_class = HealthInfoCreateForm
+    template_name = 'healthinfo/update.html'
+    success_message = 'Residente editado con éxito!'
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['active_page'] = 'resident'
+        return context
+    
+    def get_success_url(self):
+        pk = Resident.objects.latest('last_modified').pk
+        return reverse('resident_detail', kwargs = {'pk': pk})
 
 
 # ------------------------------------------ Medication stuff ------------------------------------------
