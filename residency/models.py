@@ -51,42 +51,34 @@ class Resident(models.Model):
     drop_date = models.DateField(help_text = 'Formato AAAA-mm-dd', blank = True, null = True)
     re_enter_date = models.DateField(help_text = 'Formato AAAA-mm-dd', blank = True, null = True)
     decease_date = models.DateField(help_text = 'Formato AAAA-mm-dd', blank = True, null = True)
-    health_info = models.OneToOneField('HealthInfo', on_delete = models.CASCADE)
     
-    def age(self):
-        age = date.today().year - self.birth_date.year
-        return age
+    # Health related information.
+    
+    prepaid = models.ForeignKey(Prepaid, on_delete = models.PROTECT, default = 1)
+    affiliation_number = models.CharField(max_length = 100)
+    vaccines = models.TextField(max_length = 500, blank = True, null = True)
+    notes = models.TextField(max_length = 500, blank = True, null = True)
+    weight = models.CharField(max_length = 50, blank = True, null = True)
+    height = models.CharField(max_length = 50, blank = True, null = True)
+    bmi = models.CharField(max_length = 50, blank = True, null = True)
+    survival_certificate = models.BooleanField(default = False)
+    
+    def calculate_age(self):
+        today = date.today()
+        return today.year - self.birth_date.year - ((today.month, today.day) < (self.birth_date.month, self.birth_date.day))
     
     def tutor_list(self):
         return self.tutor.all()
     
     def __str__(self):
-        return f'{self.first_name} {self.last_name} / {self.nickname}'
+        return f'{self.last_name}, {self.first_name} / {self.nickname}'
     
     class Meta:
         ordering = ['nickname']
         
-    def get_absolute_url(self):
-        return reverse('resident_list')
-    
-    
-class HealthInfo(models.Model):
-    # Resident's health related information model.
-    
-    prepaid = models.ForeignKey(Prepaid, on_delete = models.PROTECT, default = 0)
-    affiliation_number = models.CharField(max_length = 100)
-    flu_vaccine_2020 = models.DateField(help_text = 'Formato AAAA-mm-dd', blank = True, null = True)
-    flu_vaccine_2021 = models.DateField(help_text = 'Formato AAAA-mm-dd', blank = True, null = True)
-    covid_dose1 = models.DateField(help_text = 'Formato AAAA-mm-dd', blank = True, null = True)
-    covid_dose2 = models.DateField(help_text = 'Formato AAAA-mm-dd', blank = True, null = True)
-    weight = models.CharField(max_length = 50, blank = True, null = True)
-    height = models.CharField(max_length = 50, blank = True, null = True)
-    bmi = models.CharField(max_length = 50, blank = True, null = True)
-    allergies = models.CharField(max_length = 200, blank = True, null = True)
-    diabetes = models.BooleanField(default = False)
-    hypertension = models.BooleanField(default = False)
-    oncological = models.CharField(max_length = 200, blank = True, null = True)
-    survival_certificate = models.BooleanField(default = False)
+    # def get_absolute_url(self):
+    #     resident = self.objects.latest('last_modified')
+    #     return reverse('resident_detail', kwargs = {'int': resident.pk})
 
 
 class Medication(models.Model):
@@ -223,7 +215,10 @@ class Tutor(models.Model):
     billing_info = models.CharField(max_length = 100, blank = True, null = True)
     
     def __str__(self):
-        return f'{self.first_name} {self.last_name}'
+        return f'{self.last_name}, {self.first_name}'
+    
+    class Meta:
+        ordering = ['last_name']
 
     def get_absolute_url(self):
         return reverse('resident_list')
