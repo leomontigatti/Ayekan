@@ -38,7 +38,7 @@
             {% crispy form %}
 
             {# Go back button. #}
-            <a class="btn btn-secondary" href="javascript:history.go(-1)">
+            <a class="btn btn-secondary" href="{% url 'resident_list' %}">
 				<i class="bi bi-arrow-return-left mr-2"></i>Volver
 			</a>
 

@@ -115,17 +115,20 @@ class Prescription(models.Model):
     resident = models.ForeignKey(Resident, on_delete = models.CASCADE, related_name = 'prescriptions')
     medication = models.ForeignKey(Medication, on_delete = models.PROTECT, related_name = 'prescriptions')
     breakfast = models.FloatField(default = 0)
+    before_lunch = models.FloatField(default = 0)
     lunch = models.FloatField(default = 0)
     tea = models.FloatField(default = 0)
+    before_dinner = models.FloatField(default = 0)
     dinner = models.FloatField(default = 0)
     notes = models.TextField(max_length = 500, blank = True, null = True)
     medication_status = models.CharField(max_length = 50, choices = [
         ('Activo', 'Activo'), ('Suspendido', 'Suspendido'), ('SOS', 'SOS')], default = 'Activo')
     prescription_date = models.DateField(help_text = 'Formato AAAA-mm-dd')
-    last_registry_date = models.DateTimeField(auto_now_add = True)
+    last_modified = models.DateTimeField(auto_now_add = True)
     in_pillbox = models.BooleanField(default = False)
     floor = models.CharField(max_length = 50, choices = [
         ('Planta baja', 'Planta baja'), ('Planta alta', 'Planta alta')], default = 'Planta baja')
+    authorized_by = models.ForeignKey('Staff', on_delete = models.PROTECT, related_name = 'prescriptions')
     
     def total_per_day(self):
         total = self.breakfast + self.lunch + self.tea + self.dinner
@@ -225,3 +228,9 @@ class Tutor(models.Model):
 
     def get_absolute_url(self):
         return reverse('resident_list')
+
+
+class Staff(models.Model):
+    # Staff model.
+    
+    name = models.CharField(max_length = 50)
